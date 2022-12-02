@@ -1,4 +1,4 @@
-<? php
+<?php
 
 function api_usuario_post($request){
 
@@ -7,9 +7,11 @@ function api_usuario_post($request){
         "email" => "andre@origamid.com",
 
     )
-
-    rest_ensure_response($response)
+    
 }
+
+      return rest_ensure_response($response)
+
 function registrar_api_usuario_post(){
     register_rest_route('api', '/usuario',array(
         
