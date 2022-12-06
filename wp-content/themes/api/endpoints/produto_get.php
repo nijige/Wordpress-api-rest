@@ -56,9 +56,53 @@ function registrar_api_produto_get()
 add_action('rest_api_init', 'registrar_api_produto_get');
 
 
+// API PRODUTOS
 
 function api_produtos_($request)
 {
+    $q = sanitize_text_field($request['q']) ?: '';
+    $_page = sanitize_text_field($request['_page']) ?: 0;
+    $_limit = sanitize_text_field($request['_limit']) ?: 9;
+    $usuario_id = sanitize_text_field($request['usuario_id']);
+
+    $usuario_id_query = null;
+    if ($usuario_id) {
+        $usuario_id_query = array(
+            'key' => 'usuario_id',
+            'value' => $usuario_id,
+            'compare' => '='
+
+        );
+    }
+
+    $vendido = array(
+        'key' => 'vendido',
+        'value' => 'false',
+        'compare' => '='
+    );
+
+    $query = array(
+        'post_type' => 'produto',
+        'post_per_page' => $_limit,
+        'paged' => $_page,
+        's' => $q,
+        'meta_query' => array(
+            $usuario_id_query,
+            $vendido,
+        )
+    );
+    $loop = new WP_Query($query);
+    $posts = $loop->posts;
+    $total = $loop->found_posts;
+    $produtos = array();
+    foreach ($posts as $key => $value) {
+        $produtos[] = produto_scheme($value->post_name);
+    }
+    $response = rest_ensure_response($produtos);
+    $response->header('X-Total-Count', $total);
+
+
+    return $response;
 }
 
 function registrar_api_produtos_get()
