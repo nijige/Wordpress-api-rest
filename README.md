@@ -2,3 +2,4 @@
 - :white_check_mark: WordPress REST API
 - :white_check_mark: Custom Post Type
 - :white_check_mark:API Endpoint
+- :white_check_mark:Jwt Json Web Token
