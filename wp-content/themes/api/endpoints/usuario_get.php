@@ -19,7 +19,7 @@ function api_usuario_get($request) {
       "estado" => $user_meta['estado'][0],
     );
   } else {
-    $response = new WP_Error('permissao', 'Usuário não possui permissão', array('status' => 401));
+    $response = new WP_Error('email', 'Email já cadastrado.', array('status' => 403));
   }
   return rest_ensure_response($response);
 }
@@ -34,6 +34,3 @@ function registrar_api_usuario_get() {
 }
 
 add_action('rest_api_init', 'registrar_api_usuario_get');
-
-
-?>
