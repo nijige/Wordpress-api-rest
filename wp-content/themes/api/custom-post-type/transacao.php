@@ -1,6 +1,7 @@
 <?php
 
-function registrar_cpt_transacao(){
+function registrar_cpt_transacao()
+{
     register_post_type('produto', array(
         'label' => 'Transacao',
         'description' => 'Transacao',
@@ -11,11 +12,7 @@ function registrar_cpt_transacao(){
         'query_var' => true,
         'supports' => array('custom-fields', 'author', 'title'),
         'publicly_queryable' => true
-
-
     ));
 }
 
 add_action('init', 'registrar_cpt_transacao');
-
-?>

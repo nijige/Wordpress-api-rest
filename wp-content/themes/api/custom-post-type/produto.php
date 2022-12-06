@@ -13,5 +13,3 @@ function registrar_cpt_produto() {
   ));
 }
 add_action('init', 'registrar_cpt_produto');
-
-?>
