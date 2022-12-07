@@ -12,6 +12,7 @@ require_once($template_diretorio . "/endpoints/usuario_put.php");
 require_once($template_diretorio . "/endpoints/produto_post.php");
 require_once($template_diretorio . "/endpoints/produto_get.php");
 require_once($template_diretorio . "/endpoints/produto_delete.php");
+
 require_once($template_diretorio . "/endpoints/transacao_post.php");
 require_once($template_diretorio . "/endpoints/transacao_get.php");
 

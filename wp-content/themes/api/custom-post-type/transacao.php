@@ -2,7 +2,7 @@
 
 function registrar_cpt_transacao()
 {
-    register_post_type('produto', array(
+    register_post_type('Transacao', array(
         'label' => 'Transacao',
         'description' => 'Transacao',
         'public' => true,

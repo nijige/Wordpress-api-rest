@@ -1,5 +1,6 @@
 <?php
-function registrar_cpt_produto() {
+function registrar_cpt_produto()
+{
   register_post_type('produto', array(
     'label' => 'Produto',
     'description' => 'Produto',
