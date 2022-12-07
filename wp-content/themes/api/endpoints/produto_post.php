@@ -5,13 +5,11 @@ function api_produto_post($request)
     $user = wp_get_current_user();
     $user_id = $user->ID;
 
-
     if ($user_id > 0) {
         $nome = sanitize_text_field($request['nome']);
         $preco = sanitize_text_field($request['preco']);
         $descricao = sanitize_text_field($request['descricao']);
         $usuario_id = $user->user_login;
-
 
         $response = array(
             'post_author' => $user_id,
@@ -42,17 +40,17 @@ function api_produto_post($request)
             }
         }
     } else {
-        $response = new WP_Error('permissao', 'Usuario não possui permissão', array('status' => 401));
+        $response = new WP_Error('permissao', 'Usuário não possui permissão.', array('status' => 401));
     }
-
     return rest_ensure_response($response);
 }
+
 function registrar_api_produto_post()
 {
     register_rest_route('api', '/produto', array(
         array(
             'methods' => WP_REST_Server::CREATABLE,
-            'callback' => 'api_usuario_post',
+            'callback' => 'api_produto_post',
         ),
     ));
 }
