@@ -20,7 +20,7 @@ function api_transacao_post($request)
         $response = array(
             'post_author' => $user_id,
             'post_type' => 'transacao',
-            'post_title' => $comprador_id . '-' . $produto_nome,
+            'post_title' => $comprador_id . ' - ' . $produto_nome,
             'post_status' => 'publish',
             'meta_input' => array(
                 'comprador_id' => $comprador_id,

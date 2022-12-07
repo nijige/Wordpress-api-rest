@@ -34,7 +34,7 @@ function produto_scheme($slug)
 
         );
     } else {
-        $response = new WP_Error('naoexiste', 'Produto não encontrado.',
+        $response = new WP_Error('naoexiste', 'Produto não encontrado.', array('status' => 404));
     }
     return $response;
 }
@@ -48,7 +48,7 @@ function registrar_api_produto_get()
     register_rest_route('api', '/produto/(?P<slug>[-\w]+)', array(
         array(
             'methods' => WP_REST_Server::READABLE,
-            'callback' => 'api_usuario_get',
+            'callback' => 'api_produto_get',
         ),
     ));
 }
@@ -58,7 +58,8 @@ add_action('rest_api_init', 'registrar_api_produto_get');
 
 // API PRODUTOS
 
-function api_produtos_($request){
+function api_produtos_($request)
+{
 
     $q = sanitize_text_field($request['q']) ?: '';
     $_page = sanitize_text_field($request['_page']) ?: 0;
@@ -92,11 +93,11 @@ function api_produtos_($request){
             $vendido,
         )
     );
-    
+
     $loop = new WP_Query($query);
     $posts = $loop->posts;
     $total = $loop->found_posts;
-    
+
     $produtos = array();
     foreach ($posts as $key => $value) {
         $produtos[] = produto_scheme($value->post_name);

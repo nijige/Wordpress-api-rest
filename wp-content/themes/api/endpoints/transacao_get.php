@@ -40,16 +40,12 @@ function api_transacao_get($request)
             $post_meta = get_post_meta($post_id)[0];
 
 
-
-
             $response[] = array(
                 'comprador_id' => $post_meta['comprador_id'],
                 'vendedor_id' => $post_meta['vendedor_id'],
                 'endereco' => json_decode($post_meta['endereco'][0]),
                 'produto' => json_decode($post_meta['produto'][0]),
                 'data' => $value->post_date,
-
-
             );
         }
     } else {
