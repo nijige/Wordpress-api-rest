@@ -47,6 +47,3 @@ function registrar_api_usuario_post() {
 }
 
 add_action('rest_api_init', 'registrar_api_usuario_post');
-
-
-?>
