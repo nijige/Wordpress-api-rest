@@ -1,49 +1,59 @@
 <?php
+// API PRODUTOS
+function api_transacao_get($request) {
+  $tipo = sanitize_text_field($request['tipo']) ?: 'comprador_id';
+  $user = wp_get_current_user();
+  $user_id = $user->ID;
 
-function api_usuario_post($request) {
-  $email = sanitize_email($request['email']);
-  $senha = $request['senha'];
-  $nome = sanitize_text_field($request['nome']);
-  $rua = sanitize_text_field($request['rua']);
-  $cep = sanitize_text_field($request['cep']);
-  $numero = sanitize_text_field($request['numero']);
-  $bairro = sanitize_text_field($request['bairro']);
-  $cidade = sanitize_text_field($request['cidade']);
-  $estado = sanitize_text_field($request['estado']);
+  if($user_id) {
+    $login = get_userdata($user_id)->user_login;
 
-  $user_exists = username_exists($email);
-  $email_exists = email_exists($email);
+    $meta_query = null;
+    if($tipo) {
+      $meta_query = array(
+        'key' => $tipo,
+        'value' => $login,
+        'compare' => '='
+      );
+    }
 
-  if(!$user_exists && !$email_exists && $email && $senha) {
-    $user_id = wp_create_user($email, $senha, $email);
-
-    $response = array(
-      'ID' => $user_id,
-      'display_name' => $nome,
-      'first_name' => $nome,
-      'role' => 'subscriber',
+    $query = array(
+      'post_type' => 'transacao',
+      'orderby' => 'date',
+      'posts_per_page' => -1,
+      'meta_query' => array(
+        $meta_query
+      )
     );
-    wp_update_user($response);
 
-    update_user_meta($user_id, 'cep', $cep);
-    update_user_meta($user_id, 'rua', $rua);
-    update_user_meta($user_id, 'numero', $numero);
-    update_user_meta($user_id, 'bairro', $bairro);
-    update_user_meta($user_id, 'cidade', $cidade);
-    update_user_meta($user_id, 'estado', $estado);
+    $loop = new WP_Query($query);
+    $posts = $loop->posts;
+
+    $response = array();
+    foreach ($posts as $key => $value) {
+      $post_id = $value->ID;
+      $post_meta = get_post_meta($post_id);
+
+      $response[] = array(
+        'comprador_id' => $post_meta['comprador_id'][0],
+        'vendedor_id' => $post_meta['vendedor_id'][0],
+        'endereco' => json_decode($post_meta['endereco'][0]),
+        'produto' => json_decode($post_meta['produto'][0]),
+        'data' => $value->post_date,
+      );
+    }
   } else {
-    $response = new WP_Error('email', 'Email já cadastrado.', array('status' => 403));
+    $response = new WP_error('permissao', 'Usuário não possui permissão.', array('status' => 401));
   }
   return rest_ensure_response($response);
 }
 
-function registrar_api_usuario_post() {
-  register_rest_route('api', '/usuario', array(
+function registrar_api_transacao_get() {
+  register_rest_route('api', '/transacao', array(
     array(
-      'methods' => WP_REST_Server::CREATABLE,
-      'callback' => 'api_usuario_post',
+      'methods' => WP_REST_Server::READABLE,
+      'callback' => 'api_transacao_get',
     ),
   ));
 }
-
-add_action('rest_api_init', 'registrar_api_usuario_post');
+add_action('rest_api_init', 'registrar_api_transacao_get');
