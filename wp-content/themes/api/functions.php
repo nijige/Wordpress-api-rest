@@ -16,33 +16,27 @@ require_once($template_diretorio . "/endpoints/produto_delete.php");
 require_once($template_diretorio . "/endpoints/transacao_post.php");
 require_once($template_diretorio . "/endpoints/transacao_get.php");
 
-
-
-
-
 function get_produto_id_by_slug($slug)
 {
-  $query = new WP_Query(
-    array(
-      'name' => $slug,
-      'post_type' => 'produto',
-      'numberposts' => 1,
-      'fields' => 'ids'
-    )
-  );
-  $post = $query->get_posts();
+  $query = new WP_Query(array(
+    'name' => $slug,
+    'post_type' => 'produto',
+    'numberposts' => 1,
+    'fields' => 'ids'
+  ));
+  $posts = $query->get_posts();
   return array_shift($posts);
 }
 
 add_action('rest_pre_serve_request', function () {
-  header('Acces-Control-Expose-Headers: X-Total-Count');
+  header('Access-Control-Expose-Headers: X-Total-Count');
 });
+
 function expire_token()
 {
   return time() + (60 * 60 * 24);
 }
 add_action('jwt_auth_expire', 'expire_token');
-
 
 function my_login_screen()
 { ?>
@@ -55,7 +49,6 @@ function my_login_screen()
     display: none;
 }
 </style>
-
 <?php }
 add_action('login_enqueue_scripts', 'my_login_screen');
 
